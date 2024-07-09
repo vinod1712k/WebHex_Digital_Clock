@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock</title>
+    <link rel="stylesheet" href="clock.css">
+</head>
+<body>
+    <div class="main">
+        <div class="container">
+            <div class="date"></div>
+            <div id="time">
+                <span class="time"></span>
+                <span class="ampm"></span>
+                <br>
+                <button onclick="handleFormat()" class="btn">24hrs Format</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let is12HourFormat = true;
+
+        function updateTime(){
+            var currentTime = new Date();
+            
+            var hrs = currentTime.getHours();
+            var mins = (currentTime.getMinutes() < 10) ? "0" + currentTime.getMinutes() : currentTime.getMinutes();
+            var secs = (currentTime.getSeconds() < 10) ? "0" + currentTime.getSeconds() : currentTime.getSeconds();
+            var ampm = (currentTime.getHours() >= 12) ? 'PM' : 'AM';
+            
+            if (is12HourFormat) {
+                hrs = hrs % 12;
+                hrs = (hrs == 0) ? 12 : hrs; // the hour '0' should be '12'
+            }
+
+            hrs = (hrs < 10) ? "0" + hrs : hrs;
+            var Time = hrs + ":" + mins + ":" + secs;
+
+            document.getElementsByClassName("time")[0].innerHTML = Time;
+            document.getElementsByClassName("ampm")[0].innerHTML = is12HourFormat ? ampm : '';
+
+            var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var day = currentTime.getDate();
+            
+            var currentDate = weekday[currentTime.getDay()] + ", " + day + " " + month[currentTime.getMonth()] + " " + currentTime.getFullYear();
+
+            document.getElementsByClassName("date")[0].innerHTML = currentDate;
+        }
+
+        function handleFormat() {
+            is12HourFormat = !is12HourFormat;
+            document.querySelector(".btn").innerHTML = is12HourFormat ? "24hrs Format" : "12hrs Format";
+            updateTime();
+        }
+
+        updateTime();
+
+        setInterval(function(){
+            updateTime()
+        }, 1000);
+    </script>
+</body>
+</html>
